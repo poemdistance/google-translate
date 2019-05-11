@@ -55,7 +55,6 @@ for i in range(1, len(sys.argv)):
     #11:不同词性的同义词
     #12:英语解释
     
-    print(dataList)
     cprint('>> ' + dataList[0][0][1] + ': ' + dataList[0][0][0], 'yellow')
 
     if len(dataList) > 12:
