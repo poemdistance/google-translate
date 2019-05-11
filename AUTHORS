@@ -1,0 +1,9 @@
+本程序使用了开源项目https://github.com/ssut/py-googletrans里
+获取更新TKK值和根据TKK值推算TK值部分的代码, 并做了部分删除修改.
+
+原作详见此项目contributors里书写此部分代码的作者:
+@ssut @Roadcrosser @weaming @elzeard91
+
+除去使用此开源项目的部分代码，作者还包含本人: 
+@poemdistance
+
