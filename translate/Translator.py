@@ -120,7 +120,7 @@ class Translator(object):
 
     def getTran(self, text):
 
-        baseURL = 'https://translate.google.cn/'
+        baseURL = self.host
 
         self.acquire = TokenAcquirer(session=self.session, proxy=self.proxy, 
                 timeout=self.timeout, host=self.host)
@@ -173,6 +173,8 @@ data = translator.getTran("Just go forward, don't look back" )
 print(data)
 """
 """
+
+
 #-*-Test code with  proxy
 host = 'https://translate.google.com'
 proxy = { 'https':'localhost:8123' }
