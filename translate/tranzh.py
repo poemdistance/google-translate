@@ -40,8 +40,10 @@ def getSynonym(data, flag=1):
 
 
 def main():
-    tranen = Translator( targetLang='en' )
-    tranzh = Translator( targetLang='zh-CN' )
+
+    host = "https://translate.google.com/"
+    proxy = { "https":"localhost:8123" }
+    tran = Translator( targetLang='en', host=host, proxy=proxy )
 
 
     while True:
@@ -51,12 +53,6 @@ def main():
             if In == '':
                 continue
 
-            lang = detect(In)
-            print('lang = ', lang)
-            if lang == 'zh-cn':
-                tran = tranen
-            else:
-                tran = tranzh
         except:
             print()
             print('Good bye~')
@@ -78,7 +74,7 @@ def main():
             getSynonym(dataList[12], 0)
 
         print()
-        cprint('    URL: ' + 'https://translate.google.cn/#view' +
+        cprint('    URL: ' + host +'#view' +
                 '=home&op=translate&sl=en&tl=zh-CN&text=' + urllib.request.quote(In), 'green')
 
         getMoreTran(dataList[1])

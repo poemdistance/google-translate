@@ -72,7 +72,7 @@ class Translator(object):
             'accept-encoding': 'gzip, deflate, br',
             'accept-language': 'en-US,en;q=0.5',
             'dnt': '1',
-            'referer': 'https://translate.google.com/',
+            'referer': self.host,
             'Connection': 'keep-alive',
             'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 \
                            (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36',
@@ -150,7 +150,7 @@ class Translator(object):
 
         cprint('Preparing to get data from server...', 'blue')
 
-        req = urllib.request.Request(URL, headers=header)
+        req = urllib.request.Request(URL, headers=self.getHeaders())
         response = urllib.request.urlopen(req)
         content = gzip.GzipFile(fileobj=response).read().decode('utf8')
 

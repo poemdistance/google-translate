@@ -36,25 +36,14 @@ def getSynonym(data, flag=1):
     except TypeError:
         pass
 
-
-tran = Translator( targetLang='en' )
-
-
-if len(sys.argv) < 2:
-    print('Need words')
-    sys.exit
-
-for i in range(1, len(sys.argv)):
-
-    dataList = tran.getTran(sys.argv[i])
-
+def extractData(dataList, host):
 
     #有用数据下标 0, 1, 11, 12
     #0: 返回到界面的直接翻译
     #1: 各词性的其他翻译
     #11:不同词性的同义词
     #12:英语解释
-    
+
     cprint('>> ' + dataList[0][0][1] + ': ' + dataList[0][0][0], 'yellow')
 
     if len(dataList) > 12:
@@ -62,7 +51,7 @@ for i in range(1, len(sys.argv)):
         getSynonym(dataList[12], 0)
 
     print()
-    cprint('    URL: ' + 'https://translate.google.cn/#view' +
+    cprint('    URL: ' + host +'#view' +
             '=home&op=translate&sl=en&tl=zh-CN&text=' + sys.argv[i], 'green')
 
     getMoreTran(dataList[1])
@@ -72,3 +61,18 @@ for i in range(1, len(sys.argv)):
             print()
             cprint('    同义词: ', 'yellow',  end='')
             getSynonym(dataList[11])
+
+
+host = "https://translate.google.com/"
+proxy = { "https":"localhost:8123" }
+tran = Translator( targetLang='en', host=host, proxy=proxy )
+
+
+if len(sys.argv) < 2:
+    print('Need words')
+    sys.exit
+
+for i in range(1, len(sys.argv)):
+
+    dataList = tran.getTran(sys.argv[i])
+    extractData(dataList, host)
