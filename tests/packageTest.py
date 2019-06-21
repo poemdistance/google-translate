@@ -1,5 +1,8 @@
 from translate.package.Translator import Translator
 
-tran = Translator(targetLang='zh-CN')
+host = "https://translate.google.com/"
+proxy = { 'https':'localhost:8123' }
+
+tran = Translator(targetLang='zh-CN', host=host, proxy=proxy)
 data = tran.getTran('test')
 print(data)
