@@ -72,7 +72,7 @@ class Translator(object):
             'accept-encoding': 'gzip, deflate, br',
             'accept-language': 'en-US,en;q=0.5',
             'dnt': '1',
-            'referer': 'https://translate.google.com/',
+            'referer': self.host,
             'Connection': 'keep-alive',
             'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 \
                            (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36',
@@ -120,7 +120,7 @@ class Translator(object):
 
     def getTran(self, text):
 
-        baseURL = 'https://translate.google.cn/'
+        baseURL = self.host
 
         self.acquire = TokenAcquirer(session=self.session, proxy=self.proxy, 
                 timeout=self.timeout, host=self.host)
@@ -140,21 +140,19 @@ class Translator(object):
 
         if self.proxy != None:
 
-            print()
-            cprint('Setting proxy...', 'blue')
+            cprint('<proxy>','blue')
             handler = urllib.request.ProxyHandler( self.proxy )
             opener = urllib.request.build_opener( handler )
             urllib.request.install_opener(opener)
-            cprint('Setting proxy successful...', 'blue')
             print()
 
-        cprint('Preparing to get data from server...', 'blue')
+        #cprint('Preparing to get data from server...', 'blue')
 
-        req = urllib.request.Request(URL, headers=header)
+        req = urllib.request.Request(URL, headers=self.getHeaders())
         response = urllib.request.urlopen(req)
         content = gzip.GzipFile(fileobj=response).read().decode('utf8')
 
-        cprint('Got data successful...', 'blue')
+        #cprint('Got data successful...', 'blue')
         print()
         return json.loads(content)
 
@@ -173,6 +171,8 @@ data = translator.getTran("Just go forward, don't look back" )
 print(data)
 """
 """
+
+
 #-*-Test code with  proxy
 host = 'https://translate.google.com'
 proxy = { 'https':'localhost:8123' }

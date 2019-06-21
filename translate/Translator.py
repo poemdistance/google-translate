@@ -36,8 +36,7 @@ class Translator(object):
         key = []
         val = []
 
-        cprint('Target lanuage = %s' % self.targetLang, 'blue')
-        print()
+        #cprint('Target lanuage = %s' % self.targetLang, 'blue', end=' ')
 
         if self.targetLang == 'en':
             key = ['client','sl','tl','hl','dt','dt','dt','dt','dt','dt','dt',\
@@ -140,21 +139,22 @@ class Translator(object):
 
         if self.proxy != None:
 
-            print()
-            cprint('Setting proxy...', 'blue')
+            #print()
+            #cprint('Setting proxy...', 'blue')
+            cprint('<proxy>', 'blue')
             handler = urllib.request.ProxyHandler( self.proxy )
             opener = urllib.request.build_opener( handler )
             urllib.request.install_opener(opener)
-            cprint('Setting proxy successful...', 'blue')
-            print()
+            #cprint('Setting proxy successful...', 'blue')
+            #print()
 
-        cprint('Preparing to get data from server...', 'blue')
+        #cprint('Preparing to get data from server...', 'blue')
 
         req = urllib.request.Request(URL, headers=self.getHeaders())
         response = urllib.request.urlopen(req)
         content = gzip.GzipFile(fileobj=response).read().decode('utf8')
 
-        cprint('Got data successful...', 'blue')
+        #cprint('Got data successful...', 'blue')
         print()
         return json.loads(content)
 

@@ -12,11 +12,11 @@ def getMoreTran(data):
 
     try:
         print()
-        cprint('    ' + data[0][0] + ': ' + str(data[0][1]), 'yellow')
+        cprint('    ' + data[0][0] + ': ' + str(data[0][1]), 'green')
         print()
         data = data[0][2:]
         for word in data[0]:
-            cprint('    ' + word[0] + ': ' + str(word[1]), 'yellow')
+            cprint('    ' + word[0] + ': ' + str(word[1]), 'green')
     except TypeError:
         pass
 
@@ -29,9 +29,16 @@ def getSynonym(data, flag=1):
                 break;
 
             if flag:
-                cprint(element, 'yellow', end=', ')
+                if i % 4 == 0:
+                    print()
+                    print('    ', end='')
+                cprint(element, 'green', end=', ')
             else:
-                cprint(element, 'yellow', end='')
+                if i % 60 == 0:
+                    print()
+                    print('    ', end='')
+
+                cprint(element, 'cyan', end='')
 
         print()
 
@@ -47,7 +54,7 @@ def main():
 
 
     while True:
-        cprint('>> ', 'green', end='')
+        cprint('>> ', 'blue', end='')
         try:
             In = str(input())
             if In == '':
@@ -67,15 +74,15 @@ def main():
         #11:不同词性的同义词
         #12:英语解释
         
-        cprint('    '+dataList[0][0][0], 'yellow')
+        cprint('    --->'+dataList[0][0][0], 'cyan')
 
         if len(dataList) > 12:
             cprint('    ', end='')
             getSynonym(dataList[12], 0)
 
-        print()
-        cprint('    URL: ' + host +'#view' +
-                '=home&op=translate&sl=en&tl=zh-CN&text=' + urllib.request.quote(In), 'green')
+        #print()
+        #cprint('    URL: ' + host +'#view' +
+        #        '=home&op=translate&sl=en&tl=zh-CN&text=' + urllib.request.quote(In), 'green')
 
         getMoreTran(dataList[1])
 
