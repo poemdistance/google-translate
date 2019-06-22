@@ -3,6 +3,7 @@
 import sys
 import re
 import json
+import urllib
 from translate.package.Translator import Translator
 from termcolor import colored, cprint
 
@@ -27,9 +28,16 @@ def getSynonym(data, flag=1):
                 break;
 
             if flag:
-                cprint(element, 'yellow', end=', ')
+                if i % 4 == 0:
+                    print()
+                    print('    ', end='')
+                cprint(element, 'green', end=', ')
             else:
-                cprint(element, 'yellow', end='')
+                if i % 60 == 0:
+                    print()
+                    print('    ', end='')
+
+                cprint(element, 'cyan', end='')
 
         print()
 
@@ -50,9 +58,9 @@ def extractData(dataList, host):
         cprint('    ', end='')
         getSynonym(dataList[12], 0)
 
-    print()
-    cprint('    URL: ' + host +'#view' +
-            '=home&op=translate&sl=en&tl=zh-CN&text=' + sys.argv[i], 'green')
+    #print()
+    #cprint('    URL: ' + host +'#view' +
+    #        '=home&op=translate&sl=en&tl=zh-CN&text=' + urllib.request.quote(sys.argv[i]), 'green')
 
     getMoreTran(dataList[1])
 
@@ -61,7 +69,7 @@ def extractData(dataList, host):
             print()
             cprint('    同义词: ', 'yellow',  end='')
             getSynonym(dataList[11])
-
+    print()
 
 host = "https://translate.google.com/"
 proxy = { "https":"localhost:8123" }

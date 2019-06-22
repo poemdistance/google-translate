@@ -48,10 +48,12 @@ def getSynonym(data, flag=1):
 
 def main():
 
-    host = "https://translate.google.com/"
-    proxy = { "https":"localhost:8123" }
-    tran = Translator( targetLang='en', host=host, proxy=proxy )
+    host1 = "https://translate.google.cn/"
+    host2 = "https://translate.google.com/"
 
+    proxy = { "https":"localhost:8123" }
+
+    tran = Translator( targetLang='en', host=host1, proxy=None, timeout=1 )
 
     while True:
         cprint('>> ', 'blue', end='')
@@ -65,8 +67,16 @@ def main():
             print('Good bye~')
             sys.exit()
 
-        dataList = tran.getTran(In)
-
+        try:
+            dataList = tran.getTran(In)
+        except Exception as e:
+            print(e)
+            tran = Translator( targetLang='en', host=host2, proxy=proxy, timeout=1)
+            try:
+                dataList = tran.getTran(In)
+            except Exception as e:
+                print(e)
+                continue
 
         #有用数据下标 0, 1, 11, 12
         #0: 返回到界面的直接翻译
