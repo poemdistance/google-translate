@@ -8,6 +8,7 @@ import urllib
 import requests
 from termcolor import colored, cprint
 from time import time
+from socket import timeout
 from translate.package.getTK import TokenAcquirer
 from PIL import Image, PILLOW_VERSION
 
@@ -15,6 +16,7 @@ class Translator(object):
 
     def __init__(self, targetLang='zh-CN', \
             proxy=None, timeout=3, host='https://translate.google.cn'):
+        self.acquire = None;
         self.host = host
         self.targetLang = targetLang
         self.proxy = proxy
@@ -121,11 +123,10 @@ class Translator(object):
 
         baseURL = self.host
 
-        self.acquire = TokenAcquirer(session=self.session, proxy=self.proxy, 
+        if not self.acquire:
+            self.acquire = TokenAcquirer(session=self.session, proxy=self.proxy, 
                 timeout=self.timeout, host=self.host)
         self.tk = self.acquire.do(text)
-
-        header = self.getHeaders()
         params = self.getParams(text, self.tk)
 
         URL = baseURL + params
@@ -139,22 +140,20 @@ class Translator(object):
 
         if self.proxy != None:
 
-            #print()
-            #cprint('Setting proxy...', 'blue')
             cprint('<proxy>', 'blue')
             handler = urllib.request.ProxyHandler( self.proxy )
             opener = urllib.request.build_opener( handler )
             urllib.request.install_opener(opener)
-            #cprint('Setting proxy successful...', 'blue')
-            #print()
-
-        #cprint('Preparing to get data from server...', 'blue')
 
         req = urllib.request.Request(URL, headers=self.getHeaders())
-        response = urllib.request.urlopen(req)
+
+        try:
+            response = urllib.request.urlopen(req, timeout=self.timeout)
+        except Exception as e:
+            raise Exception(e);
+
         content = gzip.GzipFile(fileobj=response).read().decode('utf8')
 
-        #cprint('Got data successful...', 'blue')
         print()
         return json.loads(content)
 

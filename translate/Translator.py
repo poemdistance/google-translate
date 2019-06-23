@@ -103,16 +103,6 @@ class Translator(object):
         print(text)
         return text
 
-    def GetTranslation(text):
-        URL = baseURL + text
-        proxySupport = urllib.request.ProxyHandler({'socks5':'https://127.0.0.1:1080'})
-        opener = urllib.request.build_opener(proxySupport)
-        urllib.request.install_opener(opener)
-        #html = urlopen(URL)
-
-        #bsobj = BeautifulSoup(html, 'lxml')
-        #print(bsobj.decode('utf8'))
-
     def PrintTran(tran):
         print(tran)
 

@@ -4,6 +4,7 @@ import sys
 import re
 import json
 import urllib
+import readline
 from langdetect import detect
 from Translator import Translator
 from termcolor import colored, cprint
@@ -56,10 +57,11 @@ def main():
     tran = Translator( targetLang='zh-CN', host=host1, proxy=None, timeout=1 )
 
     while True:
-        cprint('>> ', 'blue', end='')
         try:
+            cprint('>> ', 'blue', end='')
             In = str(input())
             if In == '':
+                print()
                 continue
 
         except:
@@ -84,15 +86,11 @@ def main():
         #11:不同词性的同义词
         #12:英语解释
         
-        cprint('    --->'+dataList[0][0][0], 'cyan')
+        cprint('    ---> '+dataList[0][0][0], 'cyan')
 
         if len(dataList) > 12:
             cprint('    ', end='')
             getSynonym(dataList[12], 0)
-
-        #print()
-        #cprint('    URL: ' + host +'#view' +
-        #        '=home&op=translate&sl=en&tl=zh-CN&text=' + urllib.request.quote(In), 'green')
 
         getMoreTran(dataList[1])
 
