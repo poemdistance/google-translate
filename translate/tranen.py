@@ -9,44 +9,6 @@ from langdetect import detect
 from Translator import Translator
 from termcolor import colored, cprint
 
-def getMoreTran(data):
-
-    try:
-        print()
-        cprint('    ' + data[0][0] + ': ' + str(data[0][1]), 'green')
-        print()
-        data = data[0][2:]
-        for word in data[0]:
-            cprint('    ' + word[0] + ': ' + str(word[1]), 'green')
-    except TypeError:
-        pass
-
-def getSynonym(data, flag=1):
-
-    try:
-        #cprint('    ' + data[0][0] + ': ' + str(data[0][1][0][0]), 'yellow')
-        for i,element in enumerate(data[0][1][0][0]):
-            if flag and i > 8:
-                break;
-
-            if flag:
-                if i % 4 == 0:
-                    print()
-                    print('    ', end='')
-                cprint(element, 'green', end=', ')
-            else:
-                if i % 60 == 0:
-                    print()
-                    print('    ', end='')
-
-                cprint(element, 'cyan', end='')
-
-        print()
-
-    except TypeError:
-        pass
-
-
 def main():
 
     host1 = "https://translate.google.cn/"
@@ -58,8 +20,7 @@ def main():
 
     while True:
         try:
-            cprint('>> ', 'blue', end='')
-            In = str(input())
+            In = str(input('>> '))
             if In == '':
                 print()
                 continue
@@ -90,15 +51,15 @@ def main():
 
         if len(dataList) > 12:
             cprint('    ', end='')
-            getSynonym(dataList[12], 0)
+            tran.getSynonym(dataList[12], 0)
 
-        getMoreTran(dataList[1])
+        tran.getMoreTran(dataList[1])
 
         if len(dataList) > 12:
             if dataList[11] is not None:
                 print()
                 cprint('    同义词: ', 'yellow',  end='')
-                getSynonym(dataList[11])
+                tran.getSynonym(dataList[11])
 
 if __name__ == '__main__':
     main()

@@ -30,12 +30,12 @@ def justCopy(files, dire):
     src = os.path.split(files)
     dst = os.path.join(dire, 'package')
     dst = os.path.join(dst, src[len(src)-1])
-    print('cp file to ',dst)
+    print('Just cp file to ',dst)
     os.system('cp %s %s -p' % (files, dst))
 
 #对不同文件进行不同的复制操作
 def copy(dire, exclude):
-    normal1 = ['geten.py', 'getzh.py', 'tranen.py', 'tranzh.py']
+    normal1 = ['geten.py', 'getzh.py', 'tranen.py', 'tranzh.py', 'tranpic.py']
     normal2 = ['Translator.py']
     entries = os.listdir(dire)
     for element in entries:
