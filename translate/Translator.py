@@ -250,4 +250,5 @@ class Translator(object):
             name = self.ScanNewFile(dirname)
             self.WaitForFileSavedSuccessfully()
             data = self.ExtractText(name);
+            os.system("rm -rf "+name)
             return data
