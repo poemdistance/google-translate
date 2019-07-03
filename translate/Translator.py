@@ -133,7 +133,7 @@ class Translator(object):
         print(tran)
 
     def WaitForFileSavedSuccessfully(self):
-        time.sleep(0.1)
+        time.sleep(0.2)
 
     def getTran(self, text):
 
@@ -248,5 +248,6 @@ class Translator(object):
 
         while True:
             name = self.ScanNewFile(dirname)
+            self.WaitForFileSavedSuccessfully()
             data = self.ExtractText(name);
             return data
