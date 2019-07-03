@@ -21,7 +21,7 @@ def main():
     while True:
         try:
             #基目录为家目录,pic2char参数为home下的文件夹
-            data = tran.pic2char("Pictures/pic")
+            data = tran.pic2char("Pictures/pic/")
         except Exception as e:
             print('Exception: ', e)
             sys.exit()
