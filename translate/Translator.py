@@ -112,7 +112,7 @@ class Translator(object):
                         if entry.is_file():
                             attrs = entry.stat()
                             if attrs.st_mtime > inTime:
-                                print('\nFound new file')
+                                print('\nFound new file, ', end='')
                                 return absDir+entry.name
 
         except FileNotFoundError as err:
@@ -123,7 +123,7 @@ class Translator(object):
             sys.exit()
 
     def ExtractText(self, fileName):
-        print('Open image');print()
+        print('Open image.');
         image = Image.open(fileName)
         text = pytesseract.image_to_string(image)
 

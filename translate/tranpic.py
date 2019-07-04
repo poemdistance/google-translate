@@ -26,13 +26,22 @@ def main():
             print('Exception: ', e)
             sys.exit()
 
-        #data = data.replace('\n', ' ')
-        cprint(data, 'yellow')
+
+        if not data.isspace() and not len(data)==0:
+            cprint(data, 'yellow')
+        else:
+            print('No string found')
+            print('Wait for another...')
+            continue
 
         dataList = tran.getTran(data);
-        length = len(dataList[0])
-        for i in range(length-1):
-            cprint('    ---> '+dataList[0][i][0], 'cyan')
+        try:
+            length = len(dataList[0])
+        except Exception as e:
+            print(e)
+            continue
+    for i in range(length-1):
+        cprint('    ---> '+dataList[0][i][0], 'cyan')
         if len(dataList) > 12:
             cprint('    ', end='')
             tran.getSynonym(dataList[12], 0)
