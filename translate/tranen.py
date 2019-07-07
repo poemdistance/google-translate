@@ -3,6 +3,7 @@
 import sys
 import re
 import json
+import select
 import urllib
 import readline
 from langdetect import detect
@@ -16,7 +17,7 @@ def main():
 
     proxy = { "https":"localhost:8123" }
 
-    tran = Translator( targetLang='zh-CN', host=host1, proxy=None, timeout=1 )
+    tran = Translator( targetLang='zh-CN', host=host1, proxy=None, timeout=5 )
 
     while True:
         try:
@@ -34,7 +35,7 @@ def main():
             dataList = tran.getTran(In)
         except Exception as e:
             print(e)
-            tran = Translator( targetLang='zh-CN', host=host2, proxy=proxy, timeout=1)
+            tran = Translator( targetLang='zh-CN', host=host2, proxy=proxy, timeout=5)
             try:
                 dataList = tran.getTran(In)
             except Exception as e:

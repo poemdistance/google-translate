@@ -112,7 +112,7 @@ class Translator(object):
                         if entry.is_file():
                             attrs = entry.stat()
                             if attrs.st_mtime > inTime:
-                                print('\nFound new file')
+                                print('\nFound new file, ', end='')
                                 return absDir+entry.name
 
         except FileNotFoundError as err:
@@ -123,7 +123,7 @@ class Translator(object):
             sys.exit()
 
     def ExtractText(self, fileName):
-        print('Open image');print()
+        print('Open image.');
         image = Image.open(fileName)
         text = pytesseract.image_to_string(image)
 
@@ -133,7 +133,7 @@ class Translator(object):
         print(tran)
 
     def WaitForFileSavedSuccessfully(self):
-        time.sleep(0.1)
+        time.sleep(0.2)
 
     def getTran(self, text):
 
@@ -248,5 +248,7 @@ class Translator(object):
 
         while True:
             name = self.ScanNewFile(dirname)
+            self.WaitForFileSavedSuccessfully()
             data = self.ExtractText(name);
+            os.system("rm -rf "+name)
             return data

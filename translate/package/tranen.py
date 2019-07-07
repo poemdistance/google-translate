@@ -31,6 +31,8 @@ def main():
             sys.exit()
 
         try:
+            In.replace('\n', ' ');
+            In = In + '\n'
             dataList = tran.getTran(In)
         except Exception as e:
             print(e)
