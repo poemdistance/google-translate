@@ -11,10 +11,9 @@ class command(install):
         os.system('python3 translate/package/createPackage.py')
 
         print('Coping execution file to /usr/bin')
-        os.system('cp translate/package/geten.py /usr/bin/geten')
-        os.system('cp translate/package/getzh.py /usr/bin/getzh')
-        os.system('cp translate/package/tranen.py /usr/bin/tranen')
-        os.system('cp translate/package/tranzh.py /usr/bin/tranzh')
+        os.system('cp -v translate/package/tranen.py /usr/bin/tranen')
+        os.system('cp -v translate/package/tranzh.py /usr/bin/tranzh')
+        os.system('cp -v translate/package/tranpic.py /usr/bin/tranpic')
         install.run(self)
 
 
