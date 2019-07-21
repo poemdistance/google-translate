@@ -49,7 +49,7 @@ def main():
                 cprint('    ', end='')
                 tran.getSynonym(dataList[12], 0)
 
-            tran.getMoreTran(dataList[1])
+            tran.getMoreTran(dataList[1], None)
 
             if len(dataList) > 12:
                 if dataList[11] is not None:

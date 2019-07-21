@@ -75,7 +75,7 @@ class Translator(object):
             result += key[i] + '=' + val[i] + '&'
 
         result += key[len(key)-1]+ '=' \
-        + urllib.parse.quote_plus(word)
+                + urllib.parse.quote_plus(word)
 
         return 'translate_a/single?' + result
 
@@ -141,16 +141,16 @@ class Translator(object):
 
         if not self.acquire:
             self.acquire = TokenAcquirer(session=self.session,\
-              proxy=self.proxy, timeout=self.timeout, host=self.host)
+                    proxy=self.proxy, timeout=self.timeout, host=self.host)
 
-        self.tk = self.acquire.do(text)
+            self.tk = self.acquire.do(text)
 
         params = self.getParams(text, self.tk)
         URL = baseURL + params
 
         #用response的时候解码中译英的json出现了乱码
         #response = self.session.get(url, proxies=self.proxy\
-        # , timeout=self.timeout)
+                # , timeout=self.timeout)
         #content = response.content.decode('utf8')
 
         if self.proxy != None:
@@ -172,43 +172,44 @@ class Translator(object):
         print()
         return json.loads(content)
 
-    def getMoreTran(self, data):
+    def getMoreTran(self, data, exclude):
 
         try:
-            print()
+            string1 = ''
+            string2 = ''
+
             #词性对应的中文意思
-            cprint('    ' + data[0][0] + \
-                    ': ' + str(data[0][1]), 'green')
-            print()
+            string1 = data[0][0]+':'+','.join(data[0][1])
             data = data[0][2:]
 
             #查找单词的中文翻译对应的其他单词
             for word in data[0]:
-                cprint('    ' + word[0] + \
-                        ': ' + str(word[1]), 'green')
+                try:
+                    word[1].remove(exclude)
+                    string2 = word[0]+':'+','.join((word[1]))+' | '+string2
+                except Exception:
+                    pass
+
+            return string1+' | '+string2
+
         except TypeError:
             pass
 
     def getSynonym(self, data, flag=1):
 
         try:
+            string = ''
+            wlist = []
             for i,element in enumerate(data[0][1][0][0]):
                 if flag and i > 8:
                     break;
 
                 if flag:
-                    if i % 4 == 0:
-                        print()
-                        print('    ', end='')
-                    cprint(element, 'green', end=', ')
+                    string += element + ','
                 else:
-                    if i % 60 == 0:
-                        print()
-                        print('    ', end='')
+                    string += element
 
-                    cprint(element, 'cyan', end='')
-
-            print()
+            return string
 
         except TypeError:
             pass
@@ -225,21 +226,26 @@ class Translator(object):
         cprint('>> ' + dataList[0][0][1] + \
                 ': ' + dataList[0][0][0], 'cyan')
 
+        string = ''
         #单词的英语解释
         if len(dataList) > 12:
             cprint('    ', end='')
-            self.getSynonym(dataList[12], 0)
+            string = self.getSynonym(dataList[12], 0)
+
+            if string:  
+                cprint('英语解释:'+string,'green')
 
         #词性及中文翻译
-        self.getMoreTran(dataList[1])
+        string = self.getMoreTran(dataList[1], dataList[0][0][1])
+        cprint(string, 'red')
 
         if len(dataList) > 12:
             if dataList[11] is not None:
                 print()
                 cprint('    同义词: ', 'blue',  end='')
-                self.getSynonym(dataList[11])
-        print()
-
+                string = self.getSynonym(dataList[11])
+                if string:
+                    cprint('    '+string,'green')
 
     def pic2char(self, dirname):
 

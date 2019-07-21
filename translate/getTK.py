@@ -17,26 +17,25 @@ class TokenAcquirer(object):
     RE_TKK = re.compile(r'tkk:\'(.+?)\'', re.DOTALL)
     RE_RAWTKK = re.compile(r'tkk:\'(.+?)\'', re.DOTALL)
 
-    def __init__(self, tkk='0', session=None, host='translate.google.cn', proxy=None, timeout=None):
+    def __init__(self, tkk='0', session=None, host='translate.google.cn/',\
+            proxy=None, timeout=None, tkkPath=os.path.expanduser('~/.tkk')):
         self.session = session or requests.Session()
         self.tkk = tkk
         self.proxy = proxy
         self.timeout = timeout
         self.host = host if 'http' in host else 'https://' + host
+        self.tkkPath = tkkPath
 
     def _update(self):
 
         # we don't need to update the base TKK value when it is still valid
         now = math.floor(int(time.time()) / 3600)
 
-        if self.tkk == '0' and os.path.exists('./.tkk'):
-            with open('./.tkk', 'rb') as f:
+        if self.tkk == '0' and os.path.exists(self.tkkPath):
+            with open(self.tkkPath, 'rb') as f:
                 self.tkk = pickle.load(f)
-                #cprint('Found .tkk file, load firstly...', 'yellow')
 
         if self.tkk and int(self.tkk.split('.')[0]) == now:
-            #if os.path.exists('./.tkk'):
-                #cprint('Tkk still useful, will not change...', 'yellow')
             return
 
         r = self.session.get(self.host, proxies=self.proxy, timeout=self.timeout)
@@ -44,9 +43,8 @@ class TokenAcquirer(object):
         raw_tkk = self.RE_TKK.search(r.text)
         if raw_tkk:
             self.tkk = raw_tkk.group(1)
-            with open('./.tkk', 'wb') as f:
+            with open(self.tkkPath, 'wb') as f:
                 pickle.dump(self.tkk, f)
-                #cprint('Wrote tkk to .tkk file', 'yellow')
             return
 
     def _lazy(self, value):

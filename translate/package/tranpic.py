@@ -15,7 +15,7 @@ def main():
             targetLang='zh-CN',
             host="https://translate.google.cn/",
             proxy=None,
-            timeout=2,
+            timeout=5,
             )
 
     while True:
