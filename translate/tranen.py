@@ -41,7 +41,6 @@ def main(useShm):
             else:
                 In = str(input('>> '))
             if In == '':
-                print()
                 continue
 
         except:
@@ -133,7 +132,6 @@ def main(useShm):
 
         if len(dataList) > 12:
             if dataList[11] is not None:
-                string.replace('\n', '')
                 string = tran.getSynonym(dataList[11])
                 if string:
                     string = "    相关: "+string
@@ -168,6 +166,7 @@ if __name__ == '__main__':
     #共享内存使用标识
     useShm = 0
     times = 0
+    sys.argv.remove(sys.argv[0])
     if len(sys.argv) > 1:
         for arg in sys.argv:
             if arg == '-s':
