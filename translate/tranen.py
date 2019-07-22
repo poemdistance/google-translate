@@ -167,9 +167,10 @@ if __name__ == '__main__':
     useShm = 0
     times = 0
     sys.argv.remove(sys.argv[0])
-    if len(sys.argv) > 1:
+    if len(sys.argv) >= 1:
         for arg in sys.argv:
             if arg == '-s':
+                print('Using SharedMemory')
                 useShm = 1
             else:
                 times = 1
