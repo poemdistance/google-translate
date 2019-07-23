@@ -32,6 +32,8 @@ def main(useShm):
         shm.attach(0,0)
 
     tran = Translator( targetLang='en', host=host1, proxy=None, timeout=1 )
+    tran1 = Translator( targetLang='zh-CN', host=host1, proxy=None, timeout=1 )
+    tran2 = tran
 
     while True:
         try:
@@ -40,8 +42,16 @@ def main(useShm):
                 In = sys.argv[1]
             else:
                 In = str(input('>> '))
+
             if In == '':
-                print()
+                continue
+            elif In == 'zh':
+                print('切换到翻译中文模式',end='\n\n')
+                tran = tran2
+                continue
+            elif In == 'en':
+                print('切换到翻译英文模式', end='\n\n')
+                tran = tran1
                 continue
 
         except:
@@ -53,7 +63,7 @@ def main(useShm):
             dataList = tran.getTran(In)
         except Exception as e:
             print(e)
-            tran = Translator( targetLang='en', host=host2, proxy=proxy, timeout=1)
+            tran = Translator( targetLang='zh-CN', host=host2, proxy=proxy, timeout=1)
             try:
                 dataList = tran.getTran(In)
             except Exception as e:
@@ -117,36 +127,78 @@ def main(useShm):
 
                 length = len(string)
                 list1 = list(string)
+
+                chNum = 0
+                chIndex = 0
+
+                '''去除最后一个无用的|,若只有一行翻译，一个|符号，则不要把它删掉
+                不然会破会后面的逻辑，这里是判断竖线符号是否只有一个,并记下最后
+                一个竖线符号的下标.
+                这是段缝缝补补的代码....'''
                 for i in range(length-1, 0, -1):
                     if list1[i] == '|':
-                        list1[i] = '\0'
-                        break;
+                        chNum = chNum + 1
+                        if chNum >= 2:
+                            break
 
-                str1 = ''.join(list1).replace('|', '\n        |-')
+                        chIndex = i
+
+                if chNum != 1:
+                    list1[chIndex] = '\0'
+                else:
+                    str1 = ''.join(list1).replace('|', '\n')
+
+                #将list1重新连接成字符串并替代分隔符|为'\n |-'
+                if chNum != 1:
+                    str1 = ''.join(list1).replace('|', '\n        |-')
                 try:
                     index = str.index(str1, '\n')
-                    cprint('      '+str1[:index], 'yellow')
-                    cprint(str1[index:])
-                    print()
+                    index2 = str.index(str1,':') + 1
+                    cprint('      '+str1[:index2], 'yellow', end='')
+                    if len(str1[:index].encode('utf8')) > 60:
+                        for i, ch in enumerate(str1[index2:index]):
+                            if i % 30 == 0 and i:
+                                print()
+                                cprint('           ','yellow',end='')
+
+                            cprint(ch, 'yellow', end='')
+                            pass
+                    else:
+                        cprint(str1[index2:index], 'yellow', end='')
+
+                    if chNum != 1:
+                        print()
+
+                    if chNum != 1:
+                        cprint(str1[index:])
+                    else:
+                        print()
+
+                    #print()
                 except:
                     pass
 
         if len(dataList) > 12:
             if dataList[11] is not None:
-                string.replace('\n', '')
                 string = tran.getSynonym(dataList[11])
                 if string:
-                    string = "    相关: "+string
+                    print()
                     if useShm:
                         shm.write(string, offset+1)
                         offset = len(string.encode('utf8')) + offset
                     else:
                         #优化显示的需要，让字符串在一行内不要显示的太长
+                        cprint('    相关: ', 'green', end='\n')
                         if len(string) > 60:
-                            cprint(string[:60], 'green')
-                            cprint('          '+string[60:], 'green')
+                            for i, ch in enumerate(string):
+                                if i % 60 == 0:
+                                    print()
+                                    print('     ',end='')
+                                cprint(ch, 'green', end='')
+                                pass
+                            print()
                         else:
-                            cprint(string, 'green')
+                            cprint('        '+string, 'green')
 
         if useShm:
             '''
@@ -168,9 +220,11 @@ if __name__ == '__main__':
     #共享内存使用标识
     useShm = 0
     times = 0
-    if len(sys.argv) > 1:
+    sys.argv.remove(sys.argv[0])
+    if len(sys.argv) >= 1:
         for arg in sys.argv:
             if arg == '-s':
+                print('Using SharedMemory')
                 useShm = 1
             else:
                 times = 1
