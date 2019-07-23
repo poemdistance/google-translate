@@ -78,6 +78,11 @@ def main(useShm):
 
         #获取翻译界面的直接结果
         string = str(dataList[0][0][0])
+        try:
+            length = len(dataList[0])
+        except Exception as e:
+            print(e)
+
         if string is None:
             continue
 
@@ -85,7 +90,8 @@ def main(useShm):
             shm.write(string+'|', 1)
             offset = len((string+'|').encode('utf8'))
         else:
-            cprint('    '+In+' : '+string, 'cyan')
+            for i in range(length-1):
+                cprint('    '+dataList[0][i][0], 'cyan')
 
         #英语释义
         if len(dataList) > 12:
