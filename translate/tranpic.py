@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
-import sys
 import re
+import os
+import sys
 import json
 import urllib
 import readline
@@ -15,7 +16,7 @@ def main():
             targetLang='zh-CN',
             host="https://translate.google.cn/",
             proxy=None,
-            timeout=5,
+            timeout=2,
             )
 
     while True:
@@ -36,26 +37,7 @@ def main():
             print('Wait for another...')
             continue
 
-        dataList = tran.getTran(data);
-        try:
-            length = len(dataList[0])
-        except Exception as e:
-            print(e)
-            continue
-
-        for i in range(length-1):
-            cprint('    ---> '+dataList[0][i][0], 'cyan')
-            if len(dataList) > 12:
-                cprint('    ', end='')
-                tran.getSynonym(dataList[12], 0)
-
-            tran.getMoreTran(dataList[1], None)
-
-            if len(dataList) > 12:
-                if dataList[11] is not None:
-                    print()
-                    cprint('    同义词: ', 'yellow',  end='')
-                    tran.getSynonym(dataList[11])
+        os.system('/usr/bin/tranen '+data)
 
 if __name__ == '__main__':
     main()
