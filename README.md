@@ -10,8 +10,9 @@
 * **提取图片字符并翻译(英译中)**
 * **程序内翻译语言切换**
 
-# 待做
-* **爬取数据存储于数据库**
+# 部分运行效果截图 
+![image](./imgs/effect.png)
+![image](./imgs/effect1.png)
 
 # 安装
 ## 需要在setup.py目录下进行
@@ -26,7 +27,7 @@
    * en : 进入翻译英文模式
 
 
-## 截图翻译
+# 截图翻译
 1. 先按安装步骤完成程序部署
 2. 终端键入tranpic直接运行
 3. 利用截图软件截图保存到指定位置，默认是~/Pictures/pic，可修改
@@ -35,5 +36,8 @@
 
 # 依赖
 1. sysv_ipc pytessertact sys re json readline warnings urllib termcolor os time requests socket pillow ast pickle math ...
-2. 运行环境是python3,运行时报错再来用pip3安装对应模块就行
-3. 没有pip3请先安装
+2. 运行环境是python3,可以选择运行时报错再来用pip3或其他方式安装对应模块
+
+
+# 待做
+* **爬取数据存储于数据库用于离线翻译**
