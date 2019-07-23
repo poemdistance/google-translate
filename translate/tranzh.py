@@ -8,7 +8,6 @@ import urllib
 import readline
 import warnings
 import sysv_ipc as ipc
-from langdetect import detect
 from Translator import Translator
 from termcolor import colored, cprint
 

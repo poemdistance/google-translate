@@ -6,7 +6,6 @@ import sys
 import json
 import urllib
 import readline
-from langdetect import detect
 from Translator import Translator
 from termcolor import colored, cprint
 
