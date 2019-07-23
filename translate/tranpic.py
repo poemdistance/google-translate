@@ -1,10 +1,6 @@
 #!/usr/bin/python3
 
-import re
-import os
 import sys
-import json
-import urllib
 import readline
 from Translator import Translator
 from termcolor import colored, cprint

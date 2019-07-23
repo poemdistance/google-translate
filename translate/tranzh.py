@@ -1,10 +1,6 @@
 #!/usr/bin/python3
 
 import sys
-import re
-import json
-import select
-import urllib
 import readline
 import warnings
 import sysv_ipc as ipc
