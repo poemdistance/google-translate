@@ -32,3 +32,8 @@
 3. 利用截图软件截图保存到指定位置，默认是~/Pictures/pic，可修改
 4. 可以设置截图软件默认保存位置为tranpic检测的文件位置，截图自动保存，并设置快捷键截图，3方式配合食用更佳
 5. 后期将增加双击或鼠标提取翻译到可视化窗口
+
+# 依赖
+1. sysv_ipc pytessertact sys re json readline warnings urllib termcolor os time requests socket pillow ast pickle math ...
+2. 运行环境是python3,运行时报错再来用pip3安装对应模块就行
+3. 没有pip3请先安装
