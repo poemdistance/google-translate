@@ -185,9 +185,16 @@ class Translator(object):
             string1 = data[0][0]+':'+','.join(data[0][1])
             data = data[0][2:]
 
+
+            i = 0
+
             #查找单词的中文翻译对应的其他单词
             for word in data[0]:
                 try:
+                    i = i + 1
+                    if i > 9: #释义太多的话，截取掉以防页面被全部占用
+                        break;
+
                     word[1].remove(exclude)
                     string2 = word[0]+':'+','.join((word[1]))+' | '+string2
                 except Exception:
