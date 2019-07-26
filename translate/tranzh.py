@@ -26,42 +26,58 @@ def main(useShm):
         shm = ipc.SharedMemory(key, 0, 0)
         shm.attach(0,0)
 
-    tran = Translator( targetLang='en', host=host1, proxy=None, timeout=1 )
-    tran1 = Translator( targetLang='zh-CN', host=host1, proxy=None, timeout=1 )
+    tran = Translator( targetLang='en', host=host1, proxy=None, timeout=2 )
+    tran1 = Translator( targetLang='zh-CN', host=host1, proxy=None, timeout=2 )
     tran2 = tran
+    currTran = 'zh-CN'
 
     while True:
         try:
             #获取次数为1则从参数中获取，不用input获取
             if times == 1:
-                In = sys.argv[0]
+                In = ' '.join(list(sys.argv))
             else:
                 In = str(input('>> '))
+                if useShm:
+                    print("Python接收字符串: In = "+In)
 
             if In == '':
+                if useShm:
+                    #空字符串标识
+                    shm.write('3', 0)
                 continue
             elif In == 'zh':
                 print('切换到翻译中文模式',end='\n\n')
+                currTran = 'zh-CN'
                 tran = tran2
                 continue
             elif In == 'en':
                 print('切换到翻译英文模式', end='\n\n')
+                currTran = 'en'
                 tran = tran1
                 continue
 
-        except:
-            print()
+        except Exception as e:
+            print("Python捕获异常")
+            print(e)
+            #退出标识
+            shm.write('4', 0)
             print('Good bye~')
             sys.exit()
 
         try:
+            if useShm:
+                print('准备获取翻译...')
             dataList = tran.getTran(In)
         except Exception as e:
             print(e)
-            tran = Translator( targetLang='zh-CN', host=host2, proxy=proxy, timeout=1)
             try:
+                #TODO
+                tran = Translator( targetLang=currTran, host=host1, proxy=proxy, timeout=2 )
                 dataList = tran.getTran(In)
             except Exception as e:
+                if useShm:
+                    shm.write('2', 0)
                 print(e)
                 '''
                 如果只是获取参数的翻译结果，失败后当退出，防止
@@ -78,11 +94,25 @@ def main(useShm):
 
         #获取翻译界面的直接结果
         string = str(dataList[0][0][0])
+        try:
+            length = len(dataList[0])
+        except Exception as e:
+            print(e)
+
+        if string is None:
+            continue
+
         if useShm:
+            for i in range(1, length-1):
+                cprint('    '+dataList[0][i][0], 'cyan')
+                string = string + dataList[0][i][0]
+
             shm.write(string+'|', 1)
+            print("写入:"+string+'|')
             offset = len((string+'|').encode('utf8'))
         else:
-            cprint('    '+In+' : '+string, 'cyan')
+            for i in range(length-1):
+                cprint('    '+dataList[0][i][0], 'cyan')
 
         #英语释义
         if len(dataList) > 12:
@@ -92,6 +122,7 @@ def main(useShm):
                 string.replace('\n', '')
                 if useShm:
                     string +=  '|'
+                    print("写入:"+string)
                     shm.write(string, offset+1)
                     offset = len(string.encode('utf8')) + offset
                 else:
@@ -110,7 +141,7 @@ def main(useShm):
         if string:
             string.replace('\n', '')
             if useShm:
-                string += '|'
+                print("写入:"+string)
                 shm.write(string, offset+1)
                 offset = len(string.encode('utf8')) + offset
             else:
@@ -173,6 +204,7 @@ def main(useShm):
                 except:
                     pass
 
+        #获取相关词汇
         if len(dataList) > 12:
             if dataList[11] is not None:
                 string = tran.getSynonym(dataList[11])
@@ -180,6 +212,7 @@ def main(useShm):
                     print()
                     if useShm:
                         shm.write(string, offset+1)
+                        print("写入:"+string)
                         offset = len(string.encode('utf8')) + offset
                     else:
                         #优化显示的需要，让字符串在一行内不要显示的太长
@@ -200,8 +233,8 @@ def main(useShm):
             用于其他工程项目,在第一字节内写入1表示
             内容写入完毕
             '''
-            print(shm.read())
-            print(shm.read().decode('utf8'))
+            #print(shm.read())
+            print('翻译写入完成')
             shm.write('1', 0)
 
         if times == 1:
