@@ -34,7 +34,7 @@ def main(useShm):
         try:
             #获取次数为1则从参数中获取，不用input获取
             if times == 1:
-                In = sys.argv[1]
+                In = sys.argv[0]
             else:
                 In = str(input('>> '))
 
