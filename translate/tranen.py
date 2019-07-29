@@ -29,7 +29,7 @@ def main(useShm):
     tran = Translator( targetLang='zh-CN', host=host1, proxy=None, timeout=2 )
     tran1 = Translator( targetLang='en', host=host1, proxy=None, timeout=2 )
     tran2 = tran
-    currTran = 'zh'
+    currTran = 'zh-CN'
 
     while True:
         try:
@@ -46,12 +46,12 @@ def main(useShm):
                     #空字符串标识
                     shm.write('3', 0)
                 continue
-            elif In == 'zh':
+            elif In == 'zh' and not useShm:
                 print('切换到翻译中文模式',end='\n\n')
                 currTran = 'zh-CN'
                 tran = tran1
                 continue
-            elif In == 'en':
+            elif In == 'en' and not useShm:
                 print('切换到翻译英文模式', end='\n\n')
                 currTran = 'en'
                 tran = tran2
@@ -107,7 +107,7 @@ def main(useShm):
                 cprint('    '+dataList[0][i][0], 'cyan')
                 string = string + dataList[0][i][0]
 
-            shm.write(string+'|', 1)
+            shm.write(string+'|', 10)
             print("写入:"+string+'|')
             offset = len((string+'|').encode('utf8'))
         else:
@@ -123,7 +123,7 @@ def main(useShm):
                 if useShm:
                     string +=  '|'
                     print("写入:"+string)
-                    shm.write(string, offset+1)
+                    shm.write(string, offset+10)
                     offset = len(string.encode('utf8')) + offset
                 else:
                     print()
@@ -142,7 +142,7 @@ def main(useShm):
             string.replace('\n', '')
             if useShm:
                 print("写入:"+string)
-                shm.write(string, offset+1)
+                shm.write(string, offset+10)
                 offset = len(string.encode('utf8')) + offset
             else:
                 '''
@@ -211,7 +211,7 @@ def main(useShm):
                 if string:
                     print()
                     if useShm:
-                        shm.write(string, offset+1)
+                        shm.write(string, offset+10)
                         print("写入:"+string)
                         offset = len(string.encode('utf8')) + offset
                     else:
@@ -235,6 +235,7 @@ def main(useShm):
             '''
             #print(shm.read())
             print('翻译写入完成')
+            shm.write('\0', offset+10)
             shm.write('1', 0)
 
         if times == 1:

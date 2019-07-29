@@ -27,7 +27,8 @@ def main():
 
         data = data.replace('\n', ' ')
         if not data.isspace() and not len(data)==0:
-            cprint(data, 'yellow')
+            pass
+            #cprint(data, 'yellow')
         else:
             print('No string found')
             print('Wait for another...')
