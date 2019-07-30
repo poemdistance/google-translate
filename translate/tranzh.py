@@ -73,7 +73,7 @@ def main(useShm):
             print(e)
             try:
                 #TODO
-                tran = Translator( targetLang=currTran, host=host1, proxy=proxy, timeout=2 )
+                tran = Translator( targetLang=currTran, host=host2, proxy=proxy, timeout=2 )
                 dataList = tran.getTran(In)
             except Exception as e:
                 if useShm:
