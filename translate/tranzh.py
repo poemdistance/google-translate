@@ -93,7 +93,11 @@ def main(useShm):
         #12:英语解释
 
         #获取翻译界面的直接结果
-        string = str(dataList[0][0][0])
+        try:
+            string = str(dataList[0][0][0])
+        #捕获空字符无法取下标异常
+        except TypeError:
+            continue
         try:
             length = len(dataList[0])
         except Exception as e:
