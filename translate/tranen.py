@@ -7,6 +7,17 @@ import sysv_ipc as ipc
 from Translator import Translator
 from termcolor import colored, cprint
 
+def isChinese(Input):
+    for ch in Input:
+        if '\u4e00' <= ch <= '\u9fa5':
+            if useShm:
+                print('Pyton : Is Chinese')
+            return True
+        else:
+            if useShm:
+                print('Python : Is Enblish')
+            return False
+
 def main(useShm):
 
     host1 = "https://translate.google.cn/"
@@ -60,10 +71,22 @@ def main(useShm):
         except Exception as e:
             print("Python捕获异常")
             print(e)
+
             #退出标识
-            shm.write('4', 0)
+            if useShm:
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                print("type:"+str(exc_type))
+                if exc_type == "EOFError":
+                    continue
+                shm.write('4', 0)
+
             print('Good bye~')
             sys.exit()
+
+        if isChinese(In):
+            tran = tran1
+        else:
+            tran = tran2
 
         try:
             if useShm:
@@ -110,11 +133,11 @@ def main(useShm):
 
         if useShm:
             for i in range(1, length-1):
-                cprint('    '+dataList[0][i][0], 'cyan')
+                #cprint('    '+dataList[0][i][0], 'cyan')
                 string = string + dataList[0][i][0]
 
             shm.write(string+'|', 10)
-            print("写入:"+string+'|')
+            #print("写入:"+string+'|')
             offset = len((string+'|').encode('utf8'))
         else:
             for i in range(length-1):
@@ -128,7 +151,7 @@ def main(useShm):
                 string.replace('\n', '')
                 if useShm:
                     string +=  '|'
-                    print("写入:"+string)
+                    #print("写入:"+string)
                     shm.write(string, offset+10)
                     offset = len(string.encode('utf8')) + offset
                 else:
@@ -147,7 +170,7 @@ def main(useShm):
         if string:
             string.replace('\n', '')
             if useShm:
-                print("写入:"+string)
+                #print("写入:"+string)
                 shm.write(string, offset+10)
                 offset = len(string.encode('utf8')) + offset
             else:
@@ -218,7 +241,7 @@ def main(useShm):
                     print()
                     if useShm:
                         shm.write(string, offset+10)
-                        print("写入:"+string)
+                        #print("写入:"+string)
                         offset = len(string.encode('utf8')) + offset
                     else:
                         #优化显示的需要，让字符串在一行内不要显示的太长
@@ -239,7 +262,6 @@ def main(useShm):
             用于其他工程项目,在第一字节内写入1表示
             内容写入完毕
             '''
-            #print(shm.read())
             print('翻译写入完成')
             shm.write('\0', offset+10)
             shm.write('1', 0)
