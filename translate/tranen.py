@@ -48,7 +48,11 @@ def main(useShm):
             if times == 1:
                 In = ' '.join(list(sys.argv))
             else:
-                In = str(input('>> '))
+                try:
+                    In = str(input('>> '))
+                except KeyboardInterrupt as e:
+                    print('Good bye~')
+                    exit(0)
                 if useShm:
                     print("Python接收字符串: In = "+In)
 
@@ -92,12 +96,18 @@ def main(useShm):
             if useShm:
                 print('准备获取翻译...')
             dataList = tran.getTran(In)
+        except KeyboardInterrupt as e:
+            print('Good bye~')
+            exit(0)
         except Exception as e:
             print(e)
             try:
                 #TODO
                 tran = Translator( targetLang=currTran, host=host2, proxy=proxy, timeout=2 )
                 dataList = tran.getTran(In)
+            except KeyboardInterrupt as e:
+                print('Good bye~')
+                exit(0)
             except Exception as e:
                 if useShm:
                     shm.write('2', 0)
