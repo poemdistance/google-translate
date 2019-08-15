@@ -16,7 +16,7 @@ class Translator(object):
 
     def __init__(self, targetLang='zh-CN', \
             proxy=None, timeout=3, \
-            host='https://translate.google.cn',
+            host='https://translate.google.cn/',
             tkkPath=os.path.expanduser('~/.tkk')):
 
         self.acquire = None;
