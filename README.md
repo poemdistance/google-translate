@@ -16,7 +16,9 @@
 
 # 安装
 ## 需要在setup.py目录下进行
-* **sudo ./setup.py install**
+
+      sudo pip3 install -r requirements.txt
+      sudo ./setup.py install
 
 # 基本用法
 ## 以下二者区别是，获取结果后不退出程序(退出按Ctrl-c)，和获取结果后即退出

@@ -1,0 +1,8 @@
+requests==2.22.0
+sysv_ipc==1.0.0
+setuptools==41.2.0
+pytesseract==0.2.6
+Pillow==6.1.0
+beautifulsoup4==4.8.0
+mysql_connector_repackaged==0.3.1
+termcolor==1.1.0
