@@ -1,11 +1,14 @@
 #!/usr/bin/python3
 
 import sys
+import threading
 import readline
 import warnings
 import sysv_ipc as ipc
 from Translator import Translator
 from termcolor import colored, cprint
+#from BingTran import bingTranslator
+#import bing
 
 def isChinese(Input):
     for ch in Input:
@@ -15,7 +18,7 @@ def isChinese(Input):
             return True
         else:
             if useShm:
-                print('Python : Is Enblish')
+                print('Python : Is English')
             return False
 
 def main(useShm):
@@ -41,6 +44,8 @@ def main(useShm):
     tran1 = Translator( targetLang='en', host=host1, proxy=None, timeout=2 )
     tran2 = tran
     currTran = 'zh-CN'
+    #bt = bingTranslator()
+    url = 'https://cn.bing.com/dict/search?q='
 
     while True:
         try:
@@ -54,7 +59,7 @@ def main(useShm):
                     print('Good bye~')
                     exit(0)
                 if useShm:
-                    print("Python接收字符串: In = "+In)
+                    print("(Google)Python接收字符串: In = "+In)
 
             if In == '':
                 if useShm:
@@ -73,7 +78,7 @@ def main(useShm):
                 continue
 
         except Exception as e:
-            print("Python捕获异常")
+            print("Python捕获异常(Google)")
             print(e)
 
             #退出标识
@@ -95,6 +100,10 @@ def main(useShm):
         try:
             if useShm:
                 print('准备获取翻译...')
+
+            if len(In) > 10000:
+                In = In[:10000]
+                cprint('源数据过长，截取前10000字符', 'red')
             dataList = tran.getTran(In)
         except KeyboardInterrupt as e:
             print('Good bye~')
@@ -147,7 +156,7 @@ def main(useShm):
                 string = string + dataList[0][i][0]
 
             shm.write(string+'|', 10)
-            #print("写入:"+string+'|')
+            print("写入:"+string+'|')
             offset = len((string+'|').encode('utf8'))
         else:
             for i in range(length-1):
