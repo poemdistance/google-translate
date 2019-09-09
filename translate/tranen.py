@@ -1,7 +1,10 @@
 #!/usr/bin/python3
 
+import socks
+import socket
 import sys
 import threading
+import time
 import readline
 import warnings
 import sysv_ipc as ipc
@@ -14,19 +17,21 @@ def isChinese(Input):
     for ch in Input:
         if '\u4e00' <= ch <= '\u9fa5':
             if useShm:
-                print('Pyton : Is Chinese')
+                cprint('Pyton : Is Chinese', 'yellow')
             return True
-        else:
-            if useShm:
-                print('Python : Is English')
-            return False
+
+    return False
 
 def main(useShm):
+
+    proxyport = 1080
 
     host1 = "https://translate.google.cn/"
     host2 = "https://translate.google.com/"
 
-    proxy = { "https":"localhost:8123" }
+
+    #proxy = { "https":"localhost:8123" }
+    #proxy = { "https":"socks5://127.0.0.1:1080" }
 
     '''
     加了-s参数后会置1 useShm,
@@ -43,7 +48,7 @@ def main(useShm):
     tran = Translator( targetLang='zh-CN', host=host1, proxy=None, timeout=2 )
     tran1 = Translator( targetLang='en', host=host1, proxy=None, timeout=2 )
     tran2 = tran
-    currTran = 'zh-CN'
+    targetTran = 'zh-CN'
     #bt = bingTranslator()
     url = 'https://cn.bing.com/dict/search?q='
 
@@ -56,29 +61,26 @@ def main(useShm):
                 try:
                     In = str(input('>> '))
                 except KeyboardInterrupt as e:
-                    print('Good bye~')
+                    cprint('Good bye~', 'yellow')
                     exit(0)
                 if useShm:
-                    print("(Google)Python接收字符串: In = "+In)
+                    cprint("(Google)Python接收字符串: In = "+In, 'yellow')
 
             if In == '':
                 if useShm:
                     #空字符串标识
                     shm.write('3', 0)
                 continue
-            elif In == 'zh' and not useShm:
-                print('切换到翻译中文模式',end='\n\n')
-                currTran = 'zh-CN'
-                tran = tran1
-                continue
-            elif In == 'en' and not useShm:
-                print('切换到翻译英文模式', end='\n\n')
-                currTran = 'en'
+            elif not isChinese(In):
+                targetTran = 'zh-CN'
                 tran = tran2
-                continue
+
+            elif isChinese(In):
+                targetTran = 'en'
+                tran = tran1
 
         except Exception as e:
-            print("Python捕获异常(Google)")
+            cprint("Python捕获异常(Google)", 'red')
             print(e)
 
             #退出标识
@@ -89,33 +91,41 @@ def main(useShm):
                     continue
                 shm.write('4', 0)
 
-            print('Good bye~')
+            cprint('Good bye~', 'yellow')
             sys.exit()
-
-        if isChinese(In):
-            tran = tran1
-        else:
-            tran = tran2
 
         try:
             if useShm:
-                print('准备获取翻译...')
+                cprint('准备获取翻译...', 'yellow')
 
             if len(In) > 10000:
                 In = In[:10000]
                 cprint('源数据过长，截取前10000字符', 'red')
+
             dataList = tran.getTran(In)
         except KeyboardInterrupt as e:
-            print('Good bye~')
+            cprint('Good bye~', 'yellow')
             exit(0)
         except Exception as e:
             print(e)
             try:
-                #TODO
-                tran = Translator( targetLang=currTran, host=host2, proxy=proxy, timeout=2 )
+
+                cprint('proxy connect...', 'blue')
+
+                socks.set_default_proxy(socks.SOCKS5, '127.0.0.1', proxyport)
+                socket.socket = socks.socksocket
+
+                tran = Translator( targetLang=targetTran, host=host2, timeout=2 )
+
+                if targetTran == 'zh-CN':
+                    tran2 = tran
+                else:
+                    tran1 = tran
+
                 dataList = tran.getTran(In)
+
             except KeyboardInterrupt as e:
-                print('Good bye~')
+                cprint('Good bye~', 'yellow')
                 exit(0)
             except Exception as e:
                 if useShm:
@@ -156,7 +166,7 @@ def main(useShm):
                 string = string + dataList[0][i][0]
 
             shm.write(string+'|', 10)
-            print("写入:"+string+'|')
+            #cprint("(Google)写回共享内存:"+string+'|', 'yellow')
             offset = len((string+'|').encode('utf8'))
         else:
             for i in range(length-1):
@@ -281,7 +291,7 @@ def main(useShm):
             用于其他工程项目,在第一字节内写入1表示
             内容写入完毕
             '''
-            print('翻译写入完成')
+            cprint('(Google)翻译写入完成', 'yellow')
             shm.write('\0', offset+10)
             shm.write('1', 0)
 
@@ -300,7 +310,7 @@ if __name__ == '__main__':
     if len(sys.argv) >= 1:
         for arg in sys.argv:
             if arg == '-s':
-                print('Using SharedMemory')
+                cprint('Using SharedMemory ( Google )', 'yellow')
                 useShm = 1
             else:
                 times = 1
