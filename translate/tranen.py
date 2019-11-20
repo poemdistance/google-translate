@@ -92,7 +92,11 @@ def main(useShm):
                 shm.write('4', 0)
 
             cprint('Good bye~', 'yellow')
-            sys.exit()
+            #sys.exit()
+            #TODO
+            cprint('Not exit', 'red')
+            time.sleep(1)
+            continue
 
         try:
             if useShm:
@@ -136,6 +140,7 @@ def main(useShm):
                 一直失败导致无限循环尝试代理连接'''
                 if times == 1:
                     sys.exit(1)
+
                 continue
 
         #有用数据下标 0, 1, 11, 12
