@@ -10,6 +10,7 @@ import warnings
 import sysv_ipc as ipc
 from Translator import Translator
 from termcolor import colored, cprint
+import signal
 #from BingTran import bingTranslator
 #import bing
 
@@ -22,12 +23,17 @@ def isChinese(Input):
 
     return False
 
+def exit(signo, frame):
+    sys.exit(0)
+
 def main(useShm):
 
     proxyport = 1080
 
     host1 = "https://translate.google.cn/"
     host2 = "https://translate.google.com/"
+
+    signal.signal ( signal.SIGTERM, exit )
 
 
     #proxy = { "https":"localhost:8123" }
