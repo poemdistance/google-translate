@@ -34,6 +34,7 @@ def main(useShm):
     host2 = "https://translate.google.com/"
 
     signal.signal ( signal.SIGTERM, exit )
+    signal.signal ( signal.SIGINT, exit )
 
 
     #proxy = { "https":"localhost:8123" }
