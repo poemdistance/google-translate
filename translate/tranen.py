@@ -3,7 +3,7 @@
 import socks
 import socket
 import sys
-import threading
+# import threading
 import time
 import readline
 import warnings
@@ -11,6 +11,7 @@ import sysv_ipc as ipc
 from Translator import Translator
 from termcolor import colored, cprint
 import signal
+import os
 #from BingTran import bingTranslator
 #import bing
 
@@ -24,7 +25,7 @@ def isChinese(Input):
     return False
 
 def exit(signo, frame):
-    sys.exit(0)
+    os._exit(0)
 
 def main(useShm):
 
