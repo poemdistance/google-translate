@@ -50,8 +50,12 @@ def main(useShm):
         path = "/tmp"
         projectID = 2333
         key = ipc.ftok(path, projectID)
-        shm = ipc.SharedMemory(key, 0, 0)
-        shm.attach(0,0)
+        try:
+            shm = ipc.SharedMemory(key, 0, 0)
+            shm.attach(0,0)
+        except Exception as e:
+            print(' tranen 获取共享内存失败'+str(e))
+            sys.exit(1)
 
     tran = Translator( targetLang='zh-CN', host=host1, proxy=None, timeout=2 )
     tran1 = Translator( targetLang='en', host=host1, proxy=None, timeout=2 )
