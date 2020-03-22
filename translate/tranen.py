@@ -3,7 +3,7 @@
 import socks
 import socket
 import sys
-# import threading
+import setproctitle
 import time
 import readline
 import warnings
@@ -28,6 +28,8 @@ def exit(signo, frame):
     os._exit(0)
 
 def main(useShm):
+
+    setproctitle.setproctitle("tranen: Google Translation")
 
     proxyport = 1080
 
