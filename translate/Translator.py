@@ -10,7 +10,7 @@ import pytesseract
 from termcolor import colored, cprint
 from socket import timeout
 from getTK import TokenAcquirer
-from PIL import Image, PILLOW_VERSION
+from PIL import Image
 
 class Translator(object):
 
