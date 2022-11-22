@@ -4,5 +4,5 @@ setproctitle==1.1.10
 sysv_ipc==1.0.0
 termcolor==1.1.0
 beautifulsoup4==4.9.3
-Pillow==8.2.0
+Pillow==9.3.0
 SocksiPy_branch==1.01
