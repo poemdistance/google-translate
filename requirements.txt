@@ -1,5 +1,5 @@
 pytesseract==0.2.6
-requests==2.22.0
+requests==2.31.0
 setproctitle==1.1.10
 sysv_ipc==1.0.0
 termcolor==1.1.0
